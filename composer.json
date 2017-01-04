@@ -1,0 +1,22 @@
+{
+    "name": "ljw/excel",
+    "description": "my excel data",
+    "keywords": ["excel", "ljw"],
+    "homepage": "http://github.com/lejianwen/excel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "JianWen Le",
+            "email": "84855512@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "phpoffice/phpexcel": "1.8.1"
+    },
+    "autoload": {
+        "psr-4": {"Ljw\\Excel\\": "src/Excel"}
+    }
+
+
+}
