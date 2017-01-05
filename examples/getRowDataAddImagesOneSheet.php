@@ -13,11 +13,9 @@ $file = '/test.xlsx';
 $image_path = '/data/upload/';
 $excel = new \Ljw\Excel\Excel();
 $excel->loadFile($file);
-$data = $excel->loadDataFromSheetRow(0);
-//将excel中的图片存到$path中
-$imageData = $excel->saveImagesFromSheet(0, $image_path);
-//B列的是图片，组合
-$re = $excel->combineSheetData($data, $imageData, 'B');
-//G列的是图片，组合
-$re = $excel->combineSheetData($re, $imageData, 'G');
-var_dump($re);
+$excel->loadDataFromSheetRow(0);
+//将sheet中的图片存到$path中
+$excel->saveImagesFromSheet(0, $image_path);
+$excel->combineExcelData();
+$data = $excel->getSheetData(0);
+var_dump($data);

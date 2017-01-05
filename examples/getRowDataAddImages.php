@@ -14,13 +14,9 @@ $image_path = '/data/upload/';
 $excel = new \Ljw\Excel\Excel();
 $excel->loadFile($file);
 //请保证每个sheet的格式一致否则请用单一sheet数据合并
-$data = $excel->loadDataFromExcelRow();
+$excel->loadDataFromExcelRow();
 //将excel中的图片存到$path中
-$imageData = $excel->saveImagesFromExcel($image_path);
-
-//B列的是图片
-$re = $excel->combineExcelData($data, $imageData,'B');
-//G列的是图片
-$re = $excel->combineExcelData($re, $imageData,'G');
-
-var_dump($re);
+$excel->saveImagesFromExcel($image_path);
+$excel->combineExcelData();
+$data = $excel->getExcelData();
+var_dump($data);

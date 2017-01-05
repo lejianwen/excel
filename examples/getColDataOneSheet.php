@@ -14,7 +14,9 @@ $file = '/test.xlsx';
 $excel = new \Ljw\Excel\Excel();
 $excel->loadFile($file);
 //读取第一个sheet
-$data = $excel->loadDataFromSheetCol(0);
+$excel->loadDataFromSheetCol(0);
 //读取第二个sheet
-$data2 = $excel->loadDataFromSheetCol(1);
+$excel->loadDataFromSheetCol(1);
+$data = $excel->getSheetData(0);
+$data2 = $excel->getSheetData(1);
 var_dump($data);

@@ -14,11 +14,9 @@ $image_path = '/data/upload/';
 $excel = new \Ljw\Excel\Excel();
 $excel->loadFile($file);
 //读取第2个sheet的数据，按列组合
-$data = $excel->loadDataFromSheetCol(1);
+$excel->loadDataFromSheetCol(1);
 //将excel中的图片存到$path中
-$imageData = $excel->saveImagesFromSheet(1, $image_path);
-//2行的是图片,组合
-$re = $excel->combineSheetData($data, $imageData, '2');
-//3行的是图片,组合
-$re = $excel->combineSheetData($re, $imageData, '7');
-var_dump($re);
+$excel->saveImagesFromSheet(1, $image_path);
+$excel->combineExcelData();
+$data = $excel->getSheetData(1);
+var_dump($data);

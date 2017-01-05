@@ -12,5 +12,6 @@ require_once __DIR__ .'/../../../autoload.php';
 $file = '/test.xlsx';
 $excel = new \Ljw\Excel\Excel();
 $excel->loadFile($file);
-$data = $excel->loadDataFromExcelCol();
+$excel->loadDataFromExcelCol();
+$data = $excel->getExcelData();
 var_dump($data);
