@@ -15,11 +15,21 @@ class Excel
     protected $objPHPExcel;
     protected $excelData;
     protected $images;
+    //公式的列或者行
+    protected $calculatedIndex;
+
 
     public function __construct()
     {
         $this->excelData = [];
         $this->images = [];
+        $this->calculatedIndex = [];
+    }
+
+    public function setCalculatedIndex($index)
+    {
+        if($index && !in_array($index, $this->calculatedIndex))
+            $this->calculatedIndex[] = $index;
     }
 
     public function getExcelData()
@@ -83,18 +93,18 @@ class Excel
      * @param $i int sheet的索引值
      * @param $isCalculated bool 是否是公式
      */
-    public function loadDataFromSheetRow($i, $isCalculated = false)
+    public function loadDataFromSheetRow($i)
     {
-        $this->_loadData($i, true, $isCalculated);
+        $this->_loadData($i, true);
     }
 
     /**按列分组读取sheet数据
      * @param $i int sheet的索引值
      * @param $isCalculated bool 是否是公式
      */
-    public function loadDataFromSheetCol($i, $isCalculated = false)
+    public function loadDataFromSheetCol($i)
     {
-        $this->_loadData($i, false, $isCalculated);
+        $this->_loadData($i, false);
     }
 
     public function sheetToArray()
@@ -103,7 +113,7 @@ class Excel
     }
 
 
-    protected function _loadData($i, $isRow = true, $isCalculated = false)
+    protected function _loadData($i, $isRow = true)
     {
         if(!empty($this->excelData[$i]))
             return;
@@ -119,7 +129,7 @@ class Excel
             {
                 $col_str = \PHPExcel_Cell::stringFromColumnIndex($col);
                 //是否是公式值
-                if ($isCalculated)
+                if (in_array($col_str, $this->calculatedIndex) || in_array($row, $this->calculatedIndex))
                     $value = (string)$objWorksheet->getCell($col_str . $row)->getCalculatedValue();
                 else
                     $value = (string)$objWorksheet->getCell($col_str . $row)->getValue();

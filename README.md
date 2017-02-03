@@ -7,6 +7,11 @@ composer require "ljw/excel":"dev-master"
     $excel = new \Ljw\Excel\Excel();    
     $excel->loadFile($file);
 ## 读取数据
+###excel中某行或者某列是公式
+    // A列是公式
+    $excel->setCalculatedIndex('A');
+    // 5行是公式
+    $excel->setCalculatedIndex(5);
 ###读取整个excel数据
     //按列读取整个excel中的数据  
     //请保证每个sheet中的数据都是按列分组的，即一列一组数据
