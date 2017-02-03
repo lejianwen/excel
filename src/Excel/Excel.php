@@ -51,59 +51,6 @@ class Excel
         return $this->objPHPExcel;
     }
 
-    /**按行分组读取sheet数据
-     * @param $i int sheet的索引值
-     */
-    public function loadDataFromSheetRow($i)
-    {
-        if(!empty($this->excelData[$i]))
-            return;
-        $objWorksheet = $this->objPHPExcel->getSheet($i);
-        //获取总行数
-        $highestRow = $objWorksheet->getHighestRow();
-        //获取总列数
-        $highestColumn = $objWorksheet->getHighestColumn();
-        $highestColumnIndex = \PHPExcel_Cell::columnIndexFromString($highestColumn);
-        for ($row = 1; $row <= $highestRow; $row++)
-        {
-            for ($col = 0; $col < $highestColumnIndex; $col++)
-            {
-                $col_str = \PHPExcel_Cell::stringFromColumnIndex($col);
-                $this->excelData[$i][$row][$col_str] = (string)$objWorksheet->getCell($col_str . $row)->getValue();
-                //公式值
-                //$objWorksheet->getCell($col_str . $row)->getCalculatedValue();
-            }
-        }
-    }
-
-    public function sheetToArray()
-    {
-
-    }
-
-    /**按列分组读取sheet数据
-     * @param $i int sheet的索引值
-     */
-    public function loadDataFromSheetCol($i)
-    {
-        if(!empty($this->excelData[$i]))
-            return;
-        $objWorksheet = $this->objPHPExcel->getSheet($i);
-        //获取总行数
-        $highestRow = $objWorksheet->getHighestRow();
-        //获取总列数
-        $highestColumn = $objWorksheet->getHighestColumn();
-        $highestColumnIndex = \PHPExcel_Cell::columnIndexFromString($highestColumn);
-        for ($col = 0; $col < $highestColumnIndex; $col++)
-        {
-            $col_str = \PHPExcel_Cell::stringFromColumnIndex($col);
-            for ($row = 1; $row <= $highestRow; $row++)
-            {
-                $this->excelData[$i][$col_str][$row] = (string)$objWorksheet->getCell($col_str . $row)->getValue();
-            }
-        }
-    }
-
     /**按行分组读取整个excel数据，包括所有的sheet
      * @throws Exception
      */
@@ -131,6 +78,62 @@ class Excel
             $this->loadDataFromSheetCol($i);
         }
     }
+
+    /**按行分组读取sheet数据
+     * @param $i int sheet的索引值
+     * @param $isCalculated bool 是否是公式
+     */
+    public function loadDataFromSheetRow($i, $isCalculated = false)
+    {
+        $this->_loadData($i, true, $isCalculated);
+    }
+
+    /**按列分组读取sheet数据
+     * @param $i int sheet的索引值
+     * @param $isCalculated bool 是否是公式
+     */
+    public function loadDataFromSheetCol($i, $isCalculated = false)
+    {
+        $this->_loadData($i, false, $isCalculated);
+    }
+
+    public function sheetToArray()
+    {
+
+    }
+
+
+    protected function _loadData($i, $isRow = true, $isCalculated = false)
+    {
+        if(!empty($this->excelData[$i]))
+            return;
+        $objWorksheet = $this->objPHPExcel->getSheet($i);
+        //获取总行数
+        $highestRow = $objWorksheet->getHighestRow();
+        //获取总列数
+        $highestColumn = $objWorksheet->getHighestColumn();
+        $highestColumnIndex = \PHPExcel_Cell::columnIndexFromString($highestColumn);
+        for ($row = 1; $row <= $highestRow; $row++)
+        {
+            for ($col = 0; $col < $highestColumnIndex; $col++)
+            {
+                $col_str = \PHPExcel_Cell::stringFromColumnIndex($col);
+                //是否是公式值
+                if ($isCalculated)
+                    $value = (string)$objWorksheet->getCell($col_str . $row)->getCalculatedValue();
+                else
+                    $value = (string)$objWorksheet->getCell($col_str . $row)->getValue();
+                //按行分组还是按列
+                if($isRow)
+                    $this->excelData[$i][$row][$col_str] = $value;
+                else
+                    $this->excelData[$i][$col_str][$row] = $value;
+            }
+        }
+    }
+
+
+
 
     /**合并数据数组和图片
      */
